@@ -4,25 +4,29 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
-
+  branches:
+    include: [ "*" ]
+  tags:
+    include: [ "*" ]
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
 
-- script: |
-    mkdir $(Build.ArtifactStagingDirectory)/publish
-    npm install 
-    cp -r node_modules server.js $(Build.ArtifactStagingDirectory)/publish
-  displayName: 'Make artifacts ready'
+  - script: |
+      mkdir $(Build.ArtifactStagingDirectory)/publish
+      npm install
+      cp -r node_modules server.js $(Build.ArtifactStagingDirectory)/publish
+    displayName: 'Make artifacts ready'
 
-- task: UniversalPackages@0
-  inputs:
-    command: 'publish'
-    publishDirectory: '$(Build.ArtifactStagingDirectory)/publish'
-    feedsToUsePublish: 'internal'
-    vstsFeedPublish: 'f4b641c1-99db-46d1-8110-5c6c24ce2fb9/7cf59834-72de-465b-849a-43b5ab6d856d'
-    vstsFeedPackagePublish: 'user'
-    versionOption: 'patch'
-  displayName: 'Publish Artifacts'
+  - task: UniversalPackages@0
+    inputs:
+      command: 'publish'
+      publishDirectory: '$(Build.ArtifactStagingDirectory)/publish'
+      feedsToUsePublish: 'internal'
+      vstsFeedPublish: 'f635c088-1047-40e8-8c29-2e3b05a38010/f955fae1-be95-4094-bf98-2e55fc5e5985'
+      vstsFeedPackagePublish: 'user'
+      versionOption: 'custom'
+      versionPublish: '$(Build.SourceBranchName)'
+    displayName: Publish Artficats
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
