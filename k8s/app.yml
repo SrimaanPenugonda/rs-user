@@ -23,7 +23,7 @@ spec:
             - name: MONGO_URL
               value: "mongodb://mongodb:27017/user"
             - name: REDIS_HOST
-              value: redis-headless
+              value: redis-master
 ---
 apiVersion: v1
 kind: Service
