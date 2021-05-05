@@ -1,0 +1,41 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include: ["*"] #triggers with all changes in branch
+  tags:
+    include: ["*"] # triggers with all changes and tagged them
+
+pool: Default  #self hosted pool
+
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'env'
+  displayName: Env Command #this task helps to check the BUILD parameters
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      sudo yum install nodejs make gcc-c++ -y
+      mkdir $(Build.SourcesDirectory)/publish
+      npm install --unsafe-perm
+      cp -r node_modules server.js $(Build.SourcesDirectory)/publish
+  displayName: Prepare Artifacts
+
+- task: UniversalPackages@0
+  condition: contains(variables['Build.SourceBranch'],'tags') #this condition helps to publish artifacts only when
+  inputs: #publish user artifactory                     #tags , Build.SourceBranch
+     command: 'publish'
+     publishDirectory: '$(Build.SourcesDirectory)/publish'  # here download only publish directory
+     feedsToUsePublish: 'internal'
+     vstsFeedPublish: '736b4ce8-9eaf-495c-9983-ed63d9930834'
+     vstsFeedPackagePublish: 'rsuser'
+     versionOption: 'custom'
+     versionPublish: '$(Build.SourceBranchName)' #Artifact version will be picked from git tag
+  displayName: Publish Artficats
