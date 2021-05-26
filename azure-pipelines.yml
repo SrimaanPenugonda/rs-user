@@ -23,7 +23,7 @@ steps:
     targetType: 'inline'
     script: |
       cd /opt
-      curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.5.0.2216-linux.zip
+      curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.1.2450-linux.zip
       unzip sonar-scanner-cli-4.5.0.2216-linux.zip 
       rm -rf sonar
       mv sonar-scanner-4.5.0.2216-linux sonar 
