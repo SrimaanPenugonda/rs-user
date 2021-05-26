@@ -18,6 +18,13 @@ steps:
     script: 'env'
   displayName: Env Command #this task helps to check the BUILD parameters
 
+- script: |
+    curl -s https://raw.githubusercontent.com/linuxautomations/labautomation/master/tools/sonar-scanner/install.sh | sudo bash
+  displayName: 'Setup Sonar Scanner'
+
+- script: |
+    sonar-scanner -Dsonar.projectKey=user -Dsonar.sources=. -Dsonar.host.url=http://3.236.121.125:9000 -Dsonar.login=373459d9f9ecbd13ca3d907f9ec6f6816b544652 
+  displayName: 'Run Sonar Scan'
 - task: Bash@3
   inputs:
     targetType: 'inline'
