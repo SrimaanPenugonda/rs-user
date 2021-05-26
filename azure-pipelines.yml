@@ -19,11 +19,19 @@ steps:
   displayName: Env Command #this task helps to check the BUILD parameters
 
 - script: |
-    curl -s https://raw.githubusercontent.com/linuxautomations/labautomation/master/tools/sonar-scanner/install.sh | sudo bash
+    cd /opt
+    curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.5.0.2216-linux.zip
+    unzip sonar-scanner-cli-4.5.0.2216-linux.zip 
+    rm -rf sonar
+    mv sonar-scanner-4.5.0.2216-linux sonar 
+    ln -sf /opt/sonar/bin/sonar-scanner /bin/sonar-scanner 
+    curl -s https://raw.githubusercontent.com/linuxautomations/labautomation/master/tools/sonar-scanner/sonar-quality-gate.sh >/bin/sonar-quality-gate.sh
+    chmod +x /bin/sonar-quality-gate.sh
   displayName: 'Setup Sonar Scanner'
 
 - script: |
     sonar-scanner -Dsonar.projectKey=user -Dsonar.sources=. -Dsonar.host.url=http://3.236.121.125:9000 -Dsonar.login=373459d9f9ecbd13ca3d907f9ec6f6816b544652 
+    export SONAR_SCANNER_OPTS="-Xmx512m"
   displayName: 'Run Sonar Scan'
 - task: Bash@3
   inputs:
