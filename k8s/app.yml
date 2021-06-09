@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: user
-          image: rkalluru/d53-rs-user:VERSION
+          image: srimaanaws2021/rs-user:VERSION
           ports:
             - containerPort: 8080
           env:
